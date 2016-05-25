@@ -1,0 +1,56 @@
+version: '2'
+services:
+
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes_from:
+      -  redisdata
+#产品时，这个需要根据实际情况修改，同时需要修改更新的还有 spring 中的redis yml配置
+    environment:
+      - REDIS_PASSWORD=29c4181fb842b5f24a3103dbd2ba17accb1f7e3c8f198689821f7955401ab921
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - wfij
+
+  redisdata:
+    image: busybox
+          #产品上线时候，需要修改实际的map本地地址
+    volumes:
+       - /home/keryhu/dbdata/redis_data:/data
+       - /home/keryhu/dbdata/redis_logs:/var/log/redis
+       - /home/keryhu/dbdata/redis_conf/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+       - wfij
+
+
+      
+  springboot:
+    image: spring-boot:0.0.1-SNAPSHOT
+    container_name: springboot
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      DOMAIN_NAME: 192.168.1.110
+      REDIS_HOST: redis
+    networks:
+      - wfij
+    
+      
+
+
+networks:
+  wfij:
+    external:
+      name: wfij-net
+
+
+
+
+
+
+
