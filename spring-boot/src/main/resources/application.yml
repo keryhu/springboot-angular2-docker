@@ -17,5 +17,5 @@ spring:
       
     
 front:
-  asset-host: localhost:3000
-  asset-manifest-url: http://localhost:3000/manifest.json
+  asset-host: ${domain.name:localhost}:3000
+  asset-manifest-url: http://${domain.name:localhost}/manifest.json
